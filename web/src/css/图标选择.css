@@ -1,0 +1,32 @@
+#id_图标选择 {
+  --图标-选择-内容宽度: var(--图标-选择-宽度);
+  --图标-选择-每行数量: 8;
+  --图标-选择-间距: 10px;
+  --图标-选择-图片宽度: calc(
+    (var(--图标-选择-内容宽度) - (var(--图标-选择-每行数量) - 1) * var(--图标-选择-间距)) /
+      var(--图标-选择-每行数量)
+  );
+  width: var(--图标-选择-宽度);
+  max-height: var(--图标-选择-高度);
+
+  .图标选择滚动框内容 {
+    display: grid;
+    gap: var(--图标-选择-间距);
+    grid-template-columns: repeat(auto-fit, minmax(var(--图标-选择-图片宽度), 1fr));
+
+    img {
+      width: var(--图标-选择-图片宽度);
+      aspect-ratio: 1/1;
+      object-fit: contain;
+
+      background-color: #f0f8ff2b;
+      border-radius: var(--小圆角);
+
+      cursor: pointer;
+    }
+
+    .选中 {
+      border: 1px solid rgb(255, 255, 255);
+    }
+  }
+}

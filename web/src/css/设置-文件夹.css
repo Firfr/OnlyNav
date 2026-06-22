@@ -1,0 +1,114 @@
+#id_设置-文件夹 {
+  color: var(--文字-颜色);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* background-color: rgba(240, 248, 255, 0.1); */
+
+  display: flex;
+  flex-direction: column;
+
+  .文件夹选择 {
+    width: 100%;
+  }
+
+  .父级信息 {
+    width: 100%;
+    height: 60px;
+    margin-bottom: var(--大圆角);
+    border-radius: var(--大圆角);
+    display: flex;
+    /* background-color: rgba(240, 248, 255, 0.1); */
+
+    .信息展示 {
+      flex: 1;
+      height: 100%;
+      padding-left: var(--大圆角);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      white-space: nowrap;
+
+      .基础信息 {
+        display: flex;
+
+        span:not(:first-of-type) {
+          margin-left: var(--大圆角);
+        }
+      }
+    }
+
+    .图标展示 {
+      height: 100%;
+      aspect-ratio: 1/1;
+      border-radius: var(--大圆角);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.473);
+
+      & > * {
+        height: 100%;
+        aspect-ratio: 1/1;
+      }
+
+      .表情符号 {
+        font-size: 40px;
+        line-height: 40px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .图片加载失败 {
+        width: 100%;
+        height: 100%;
+        background-color: #1f1f1f6d;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        span {
+          font-size: 16px;
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+
+  .分类信息 {
+    margin-top: var(--大圆角);
+  }
+
+  .未选择 {
+    background-color: rgba(240, 248, 255, 0.2);
+  }
+
+  .表格 {
+    flex: 1;
+    border-radius: var(--大圆角);
+
+    .名称 {
+      width: fit-content;
+      div {
+        width: fit-content;
+      }
+    }
+
+    .圆按钮 {
+      padding: 3px;
+      span,
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .公开 {
+      border: 1.5px solid var(--el-color-success);
+      border-radius: 50%;
+      color: #ffffff;
+    }
+  }
+}

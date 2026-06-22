@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "types": ["@types/bun"],
+    "strict": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "paths": { "@公共代码/*": ["../公共代码/*"] }
+  }
+}

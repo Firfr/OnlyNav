@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "进入已经启动的 bun 容器"
+
+docker exec -it Bun /bin/bash

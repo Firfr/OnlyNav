@@ -1,0 +1,50 @@
+#id_设置-子分类 {
+  color: var(--文字-颜色);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* background-color: rgba(240, 248, 255, 0.356); */
+
+  display: flex;
+  flex-direction: column;
+
+  .分类选择 {
+    margin-bottom: var(--小圆角);
+
+    display: flex;
+    align-items: center;
+
+    & > :first-child {
+      white-space: nowrap;
+      margin-right: var(--大圆角);
+      font-size: 16px;
+    }
+  }
+
+  .表格 {
+    flex: 1;
+    border-radius: var(--大圆角);
+
+    .名称 {
+      &,
+      & * {
+        white-space: nowrap;
+      }
+    }
+
+    .圆按钮 {
+      padding: 3px;
+      span,
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .公开 {
+      border: 1.5px solid var(--el-color-success);
+      border-radius: 50%;
+      color: #ffffff;
+    }
+  }
+}

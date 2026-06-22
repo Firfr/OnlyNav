@@ -1,0 +1,22 @@
+#id_分类-设置 {
+  width: 100%;
+  height: 100% !important;
+  border-radius: var(--大圆角);
+  display: flex;
+  flex-direction: column;
+
+  .圆按钮 {
+    padding: 3px;
+    span,
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .公开 {
+    border: 1.5px solid var(--el-color-success);
+    border-radius: 50%;
+    color: #ffffff;
+  }
+}

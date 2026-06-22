@@ -1,0 +1,183 @@
+.分类 {
+  margin-bottom: var(--内容-下边距);
+
+  & > .标题 {
+    /* all: initial; */
+
+    color: var(--文字-颜色);
+
+    display: block;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    white-space: nowrap;
+
+    height: var(--分类-标题高度);
+    padding-bottom: 10px;
+
+    line-height: 1;
+
+    .图标 {
+      margin-right: var(--小圆角);
+      height: 100%;
+      aspect-ratio: 1/1;
+      border-radius: var(--小圆角);
+      overflow: hidden;
+      /* background-color: #e3e3e3; */
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .el-image {
+        height: 100%;
+        aspect-ratio: 1/1;
+      }
+
+      & > span {
+        --表情符号字体大小: 26px;
+        font-size: var(--表情符号字体大小);
+        line-height: var(--表情符号字体大小);
+      }
+
+      .图片加载失败 {
+        width: 100%;
+        height: 100%;
+        background-color: #1f1f1f6d;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        color: #b9b9b9;
+      }
+      /* 
+*/
+    }
+
+    & > h2 {
+      --分类标题文字大小: 33px;
+      font-size: var(--分类标题文字大小);
+      line-height: calc(var(--分类标题文字大小) - 2px);
+
+      margin: 0;
+      min-height: 0;
+      margin-right: 10px;
+      font-weight: 900;
+    }
+
+    & > span {
+      --分类描述文字大小: 20px;
+      font-size: var(--分类描述文字大小);
+      line-height: calc(var(--分类描述文字大小) - 2px);
+    }
+
+    & > .增加子分类内容 {
+      margin-left: auto;
+      height: 100%;
+      aspect-ratio: 1/0.5;
+      border-radius: var(--小圆角);
+      font-size: 28px;
+      line-height: 28px;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      -webkit-text-stroke: 2px #000;
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  & > .子分类切换 {
+    .标签 {
+      --标签-边框-宽度: 1.5px;
+      --标签-边框-颜色: rgba(255, 255, 255, 0.8);
+
+      margin-bottom: 3px;
+      height: calc(100% - 3px);
+      padding: 10px;
+      border-radius: var(--小圆角);
+      border: 1px solid transparent;
+      display: flex;
+      align-items: center;
+      font-size: 17px;
+
+      color: var(--文字-颜色);
+
+      transition:
+        box-shadow 0.5s,
+        backdrop-filter 0.5s,
+        border-color 0.5s;
+
+      backdrop-filter: blur(2px);
+      background-color: rgba(0, 0, 0, 0.3);
+      &.标签选中,
+      &:hover {
+        backdrop-filter: blur(20px);
+        background-color: rgba(0, 0, 0, 0.4);
+        border-color: var(--边框颜色);
+      }
+
+      &.标签选中 {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+  }
+
+  /* Tabs 标签栏 */
+  & .el-tabs__header {
+    .el-tabs__nav-wrap {
+      /* Tabs 标签栏线条 */
+      &:after {
+        opacity: 0.6;
+        z-index: 0;
+      }
+      /* Tabs 标签超出按钮 */
+      &.is-scrollable {
+        padding: 0 calc(var(--El-Tabs-滑块宽度) + 4px) !important;
+      }
+
+      .el-tabs__nav {
+        z-index: 1;
+      }
+    }
+
+    /* Tabs 标签间距 */
+    .el-tabs__item:nth-child(2) {
+      padding: 0 !important;
+    }
+    .el-tabs__item {
+      padding-left: 16px !important;
+      padding-right: 0 !important;
+    }
+
+    .el-tabs__nav-prev,
+    .el-tabs__nav-next {
+      transition:
+        backdrop-filter 0.5s,
+        background-color 0.5s;
+      border-radius: var(--小圆角);
+      width: var(--El-Tabs-滑块宽度) !important;
+
+      & > .el-icon {
+        margin-top: -6px !important;
+        width: var(--El-Tabs-滑块宽度) !important;
+        height: var(--El-Tabs-滑块宽度) !important;
+
+        & > svg {
+          width: 100% !important;
+          height: 100% !important;
+          color: #e3e3e3;
+        }
+      }
+
+      &:hover {
+        backdrop-filter: blur(20px);
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+}
