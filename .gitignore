@@ -1,7 +1,6 @@
 *
 !.gitignore
-!bun
-!exec
+!code.sh
 
 !.dockerignore
 !Dockerfile
