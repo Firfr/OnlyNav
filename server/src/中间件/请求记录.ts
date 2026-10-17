@@ -1,6 +1,6 @@
 import type { Context, Next } from "hono";
 import { getConnInfo } from "hono/bun";
-import fn创建日志实例, { const_当前启用级别数值 } from "../工具/日志";
+import fn创建日志实例 from "../工具/日志";
 import { getCookie } from "hono/cookie";
 
 const log = fn创建日志实例("请求记录");
@@ -66,13 +66,10 @@ const fn请求记录 = async (c: Context, next: Next) => {
   log.debug("开始请求记录");
   log.info(`请求 方式：${c.req.method} 路径：${c.req.url}`);
   log.debug("请求头 Cookie:", getCookie(c));
-
-  if (const_当前启用级别数值 <= 20) {
-    log.debug(`客户端IP：${fn获取客户端IP(c)}`);
-  }
+  log.debug(`客户端IP：${fn获取客户端IP(c)}`);
 
   记录请求体: if (存在请求体的请求方法集合.has(c.req.method)) {
-    if (const_当前启用级别数值 > 20) break 记录请求体;
+    if (Bun.env.LOG_LEVEL !== "trace") break 记录请求体;
 
     const 克隆请求 = c.req.raw.clone();
     const 请求体类型 = c.req.header("content-type") || "";
@@ -84,7 +81,7 @@ const fn请求记录 = async (c: Context, next: Next) => {
     let 请求体内容类型 = "";
 
     if (请求体类型.includes("multipart/form-data")) {
-      log.debug("请求体 (文件传输)");
+      log.trace("请求体 (文件传输)");
       break 记录请求体;
     } else if (请求体类型.includes("application/json")) {
       try {
@@ -104,8 +101,8 @@ const fn请求记录 = async (c: Context, next: Next) => {
       请求体内容类型 = " (文本)";
     }
 
-    log.debug(`请求体${请求体内容类型}:`);
-    log.debug(
+    log.trace(`请求体${请求体内容类型}:`);
+    log.trace(
       typeof 请求体格式化 === "string" ? 请求体格式化 : JSON.stringify(请求体格式化, null, 2),
     );
   }
