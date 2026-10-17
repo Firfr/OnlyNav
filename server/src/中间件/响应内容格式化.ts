@@ -5,6 +5,13 @@ import fn创建日志实例 from "../工具/日志";
 const log = fn创建日志实例("响应格式化");
 
 const 跳过路径前缀集合 = new Set(["/api/icon/file/"]);
+const fn返回内容 = (文本: string): unknown => {
+  try {
+    return JSON.parse(文本);
+  } catch {
+    return 文本;
+  }
+};
 
 const fn响应内容格式化 = async (c: Context, next: Next) => {
   const 请求路径 = c.req.path;
@@ -18,50 +25,41 @@ const fn响应内容格式化 = async (c: Context, next: Next) => {
   // 等待正常业务逻辑处理完成
   await next();
 
-  log.debug("==== 响应格式化开始");
+  // 非 2xx 直接返回，交给 onError / 后续处理
+  if (c.res.status < 200 || c.res.status >= 300) return c.res;
 
-  // 只处理成功状态码 (2xx)
-  if (c.res.status >= 200 && c.res.status < 300) {
-    try {
-      // 克隆并读取原始 Body
-      const 原响应文本 = await c.res.clone().text();
-      let 响应内容格式化: any;
+  // 克隆并读取原始 Body
+  const 原响应文本 = await c.res.clone().text();
 
-      try {
-        响应内容格式化 = JSON.parse(原响应文本);
-        log.debug("路由返回内容 JSON 解析成功");
-      } catch (e) {
-        响应内容格式化 = 原响应文本;
-        log.debug("路由返回内容 JSON 解析失败，使用原始字符串");
-      }
+  // 拦截"handler 没有返回内容"的情况：2xx 但 body 为空
+  if (原响应文本 === "") {
+    const 返回内容: t_返回 = { 状态: false, 信息: `【${c.req.path}】功能等待开发！` };
 
-      const 返回内容: t_返回 = {
-        状态: true,
-        内容: 响应内容格式化,
-      };
+    const 新响应头 = new Headers(c.res.headers);
+    新响应头.set("Content-Type", "application/json; charset=utf-8");
 
-      if (c.get("信息")) {
-        返回内容.信息 = c.get("信息");
-        log.debug("路由传递了额外的信息，添加到返回数据中");
-      }
+    c.res = new Response(JSON.stringify(返回内容), { status: 200, headers: 新响应头 });
 
-      // 手动构造一个新的 Response 对象 覆盖原响应内容
-      const newResponse = new Response(JSON.stringify(返回内容), {
-        status: c.res.status,
-        headers: { "Content-Type": "application/json; charset=utf-8" },
-      });
-
-      c.res = newResponse;
-      log.debug("==== 响应格式化结束");
-      return;
-    } catch (e) {
-      console.error("响应格式化异常:", e);
-      throw new Error("响应数据格式化失败！");
-    }
+    log.debug(`【${c.req.path}】功能等待开发`);
+    return;
   }
 
-  log.debug("==== 响应格式化结束");
-  return c.res;
+  const 返回内容: t_返回 = {
+    状态: true,
+    内容: fn返回内容(原响应文本),
+  };
+
+  if (c.get("信息")) 返回内容.信息 = c.get("信息");
+
+  // 合并原响应头，再覆盖 Content-Type
+  const 新响应头 = new Headers(c.res.headers);
+  新响应头.set("Content-Type", "application/json; charset=utf-8");
+
+  c.res = new Response(JSON.stringify(返回内容), { status: c.res.status, headers: 新响应头 });
+
+  log.debug(`【${c.req.path}】响应内容格式化完成`);
+
+  return;
 };
 
 export default fn响应内容格式化;
