@@ -1,14 +1,14 @@
 .分类 {
   margin-bottom: var(--内容-下边距);
 
-  & > .标题 {
-    /* all: initial; */
+  width: var(--内容-宽度);
+  max-width: var(--内容-宽度);
 
+  & > .标题 {
     color: var(--文字-颜色);
 
-    display: block;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     white-space: nowrap;
 
@@ -17,13 +17,18 @@
 
     line-height: 1;
 
+    .分类公开 {
+      height: 100%;
+      border-left: 1px solid var(--公开-标识-颜色);
+      padding-left: 4px;
+    }
+
     .图标 {
       margin-right: var(--小圆角);
       height: 100%;
       aspect-ratio: 1/1;
       border-radius: var(--小圆角);
       overflow: hidden;
-      /* background-color: #e3e3e3; */
 
       display: flex;
       align-items: center;
@@ -52,8 +57,6 @@
         font-size: 16px;
         color: #b9b9b9;
       }
-      /* 
-*/
     }
 
     & > h2 {
@@ -77,13 +80,17 @@
       margin-left: auto;
       height: 100%;
       aspect-ratio: 1/0.5;
-      border-radius: var(--小圆角);
       font-size: 28px;
       line-height: 28px;
       overflow: hidden;
       opacity: 0;
       transition: opacity 0.3s ease;
       -webkit-text-stroke: 2px #000;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
       &:hover {
         opacity: 1;
       }
@@ -113,6 +120,7 @@
 
       backdrop-filter: blur(2px);
       background-color: rgba(0, 0, 0, 0.3);
+
       &.标签选中,
       &:hover {
         backdrop-filter: blur(20px);
@@ -123,6 +131,20 @@
       &.标签选中 {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
+      }
+    }
+
+    .子分类公开 {
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 10px;
+        bottom: 6px;
+        height: 1px;
+        width: calc(100% - 20px);
+        background: var(--公开-标识-颜色);
       }
     }
   }

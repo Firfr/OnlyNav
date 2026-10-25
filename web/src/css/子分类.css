@@ -1,8 +1,8 @@
 .子分类 {
   width: 100%;
   display: grid;
-  gap: var(--子分类内容-间距);
-  grid-template-columns: repeat(auto-fit, minmax(var(--子分类内容-最小宽度), 1fr));
+  gap: var(--导航_文件夹-间距);
+  grid-template-columns: repeat(auto-fit, minmax(var(--导航_文件夹-最小宽度), 1fr));
   min-height: 0;
   overflow: visible;
 }

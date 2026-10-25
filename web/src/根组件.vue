@@ -1,99 +1,80 @@
 <script setup lang="ts">
 import zhCn from "element-plus/es/locale/lang/zh-cn";
+import { fn获取所有数据, fn获取登录状态 } from "./工具/数据";
+import {
+  rea_弹窗_文件夹,
+  rea_弹窗_操作,
+  rea_上下文菜单_导航,
+  rea_上下文菜单_文件夹,
+} from "./全局共享数据.ts";
+import Vue_搜索 from "./组件/搜索.vue";
+import Vue_内外网切换 from "./组件/按钮/内外网切换.vue";
+import Vue_按钮_设置_登录 from "./组件/按钮/设置_登录.vue";
+import Vue_按钮_分类跳转 from "./组件/按钮/分类跳转.vue";
+import Vue_设置 from "./组件/设置.vue";
+import Vue_全部导航 from "./组件/全部导航.vue";
+import Vue_文件夹_弹窗 from "./组件/层级/文件夹-弹窗.vue";
+import Vue_上下文菜单_导航 from "./组件/上下文菜单/导航.vue";
+import Vue_上下文菜单_文件夹 from "./组件/上下文菜单/文件夹.vue";
+import Vue_操作_添加 from "./组件/操作/添加.vue";
+import Vue_操作_查看 from "./组件/操作/查看.vue";
+import Vue_操作_编辑 from "./组件/操作/编辑.vue";
+import Vue_操作_移动 from "./组件/操作/移动.vue";
+import Vue_操作_删除 from "./组件/操作/删除.vue";
+import Vue_操作_排序 from "./组件/操作/排序.vue";
 
-import { ref_是否显示设置组件, ref_是否首次打开设置 } from "./全局响应式数据.ts";
-import { fn获取登录状态, wait } from "./工具/工具.ts";
-
-import Vue_设置按钮 from "./组件/设置按钮.vue";
-import Vue_内外网切换 from "./组件/内外网切换.vue";
-import Vue_搜索栏 from "./组件/搜索栏.vue";
-
-import Vue_全部导航 from "./页面视图/全部导航.vue";
-import Vue_文件夹 from "./页面视图/导航层级/文件夹.vue";
-
-import Vue_设置 from "./页面视图/设置.vue";
-
-import Vue_层级或导航删除 from "./组件/层级或导航删除.vue";
-import Vue_层级或导航操作 from "./组件/层级或导航操作.vue";
-
-import Vue_快速选择按钮 from "./组件/快速选择按钮.vue";
-
-import Vue_导航右键菜单 from "./组件/导航右键菜单.vue";
-
-// 获取当前路由对象
-const route = useRoute();
-const router = useRouter();
-
-watch(
-  () => route,
-  (newRoute) => {
-    // 输出当前的完整路径（包含 query 和 hash）
-    console.log("当前路径:", newRoute.fullPath, newRoute.path);
-
-    // 输出该路由对应的元数据（meta）
-    console.log("路由元数据:", newRoute.meta);
-    console.log("路由name:", newRoute.name);
-  },
-  { deep: true }, // 必须开启深度监听，因为 route 对象的内部属性变化需要深层追踪
-);
-
-const Url参数 = new URLSearchParams(window.location.search);
-
-(async () => {
-  await fn获取登录状态();
-  await wait(1);
-  if (Url参数.get("path") === "seting" || Url参数.get("path") === "login") {
-    router.push("/");
-    ref_是否显示设置组件.value = true;
-    ref_是否首次打开设置.value = false;
-  }
-})();
-
-// 捕获子组件的错误
-onErrorCaptured((error, instance, info) => {
-  const 发生错误的组件名称 =
-    instance?.$options?.name || instance?.$options?.__name || "根组件.vue 中的子组件";
-  console.log("错误发生在哪个组件:", 发生错误的组件名称);
-  console.log("错误来源:", info);
-  console.error("捕获到子组件错误:", error.message);
-
-  return false;
-});
+fn获取登录状态();
+fn获取所有数据();
 </script>
 
 <template>
-  <el-config-provider :locale="zhCn">
+  <el-config-provider
+    :locale="zhCn"
+    :message="{
+      showClose: true,
+      grouping: true,
+      placement: 'bottom-right',
+      duration: 5000,
+    }"
+  >
     <n-scrollbar
       style="max-height: 100%"
       class="主内容滚动包裹容器"
       content-class="主要内容滚动视图"
     >
-      <Vue_搜索栏 />
+      <Vue_搜索 />
+
       <Vue_全部导航 />
+
       <div style="width: 100%; height: calc(var(--内容-下边距) * 3)"></div>
 
-      <Teleport to="body">
-        <n-back-top id="id_回到顶部">
-          <div class="回到顶部内容">
-            <ElIconUpload />
-          </div>
-        </n-back-top>
-      </Teleport>
+      <n-back-top id="id_回到顶部">
+        <div class="回到顶部内容">
+          <ElIconUpload />
+        </div>
+      </n-back-top>
     </n-scrollbar>
 
-    <Vue_设置按钮 />
+    <Vue_按钮_设置_登录 />
     <Vue_内外网切换 />
-
-    <Vue_文件夹 />
 
     <Vue_设置 />
 
-    <Vue_层级或导航删除 />
-    <Vue_层级或导航操作 />
+    <Vue_文件夹_弹窗 v-if="rea_弹窗_文件夹.显示" />
 
-    <Vue_快速选择按钮 />
+    <Vue_上下文菜单_导航 v-if="rea_上下文菜单_导航.显示菜单" />
+    <Vue_上下文菜单_文件夹 v-if="rea_上下文菜单_文件夹.显示菜单" />
 
-    <Vue_导航右键菜单 />
+    <template v-if="rea_弹窗_操作.显示">
+      <Vue_操作_添加 v-if="rea_弹窗_操作.操作 === '添加'" />
+      <Vue_操作_查看 v-else-if="rea_弹窗_操作.操作 === '查看'" />
+      <Vue_操作_编辑 v-else-if="rea_弹窗_操作.操作 === '编辑'" />
+      <Vue_操作_移动 v-else-if="rea_弹窗_操作.操作 === '移动'" />
+      <Vue_操作_删除 v-else-if="rea_弹窗_操作.操作 === '删除'" />
+      <Vue_操作_排序 v-else-if="rea_弹窗_操作.操作 === '排序'" />
+    </template>
+
+    <Vue_按钮_分类跳转 />
   </el-config-provider>
 </template>
 

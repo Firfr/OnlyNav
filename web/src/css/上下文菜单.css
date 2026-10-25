@@ -1,0 +1,45 @@
+#id_上下文菜单_导航,
+#id_上下文菜单_文件夹 {
+  z-index: 3000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  .菜单-内容 {
+    --上下文菜单-按钮-字体大小: 16px;
+    --上下文菜单-按钮-上下边距: 4px;
+    --上下文菜单-按钮-左右边距: 14px;
+
+    position: absolute;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    width: fit-content;
+    padding-top: calc(var(--上下文菜单-按钮-上下边距) * 3);
+    padding-bottom: calc(var(--上下文菜单-按钮-上下边距) * 3);
+    border-radius: var(--大圆角);
+
+    background-color: #1f1f1f;
+
+    .菜单-按钮 {
+      font-size: var(--上下文菜单-按钮-字体大小);
+      padding: var(--上下文菜单-按钮-上下边距) var(--上下文菜单-按钮-左右边距);
+      color: rgb(219, 219, 219);
+
+      white-space: nowrap;
+      overflow: visible;
+
+      &:hover {
+        background-color: #363635;
+      }
+
+      &:not(:last-child) {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+      }
+    }
+  }
+}

@@ -31,6 +31,10 @@ else
     --network host --cpus=2  --memory=2G \
     -e BUN_INSTALL_REGISTRY=http://npm.firfe.de5.net \
     -e LOG_LEVEL=trace \
+    -e USER=123 \
+    -e PASS=123 \
+    -e PORT=1235 \
+    -e LONG_PASS=qwertyuiop \
     -v ./ts-调试/data:/data \
     -w /app -v ./:/app \
     --entrypoint bash \

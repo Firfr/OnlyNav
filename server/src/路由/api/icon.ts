@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import fn创建日志实例 from "../../工具/日志";
 import { HTTPException } from "hono/http-exception";
 import { writeFileSync } from "node:fs";
-import { const_数据目录 } from "../../配置读取";
+import { const_配置 } from "../../启动前检查";
 import { const_图标列表 } from "../../数据/图标";
 
 const log = fn创建日志实例("路由/api/icon");
@@ -14,7 +14,7 @@ app.get("/file/:文件名", async (c) => {
   const 文件名 = c.req.param("文件名");
   log.info("开始获取图标", 文件名);
 
-  const 文件路径 = `${const_数据目录.图标}/${文件名}`;
+  const 文件路径 = `${const_配置.路径_图标目录}/${文件名}`;
 
   const 文件 = Bun.file(文件路径);
 
@@ -35,6 +35,8 @@ app.get("/list", (c) => {
   return c.json(const_图标列表);
 });
 
+const 正则_文件名校验 = /^[\u4e00-\u9fa5a-zA-Z0-9_-]{1,50}$/;
+const 允许后缀集合 = new Set([".jpg", ".jpeg", ".png", ".webp", ".apng", ".svg"]);
 app.post("/", async (c) => {
   log.info("开始上传图标");
 
@@ -43,18 +45,38 @@ app.post("/", async (c) => {
 
   if (!文件 || !文件.name) {
     报错信息 = `未上传文件`;
-    log.error(报错信息);
+    log.warn(报错信息);
     throw new HTTPException(400, { message: 报错信息 });
   }
 
   const 原始文件名 = 文件.name;
   log.info("原始文件名:", 原始文件名);
 
-  const 新文件名字 = `${Date.now()}-${原始文件名}`;
+  const 最后一个点位置 = 原始文件名.lastIndexOf(".");
+  const 无后缀文件名 = 最后一个点位置 > 0 ? 原始文件名.slice(0, 最后一个点位置) : 原始文件名;
+  const 后缀 = 最后一个点位置 > 0 ? 原始文件名.slice(最后一个点位置) : "";
+
+  if (!允许后缀集合.has(后缀)) {
+    const 报错信息 = `不支持的文件后缀：${后缀 || "无后缀"}`;
+    log.warn(报错信息);
+    throw new HTTPException(400, { message: 报错信息 });
+  }
+
+  if (!正则_文件名校验.test(无后缀文件名)) {
+    const 报错信息 = `文件名不合法：${无后缀文件名}`;
+    log.warn(报错信息);
+    throw new HTTPException(400, { message: 报错信息 });
+  }
+
+  const 文件内容Buffer = Buffer.from(await 文件.arrayBuffer());
+
+  const 完整哈希 = new Bun.CryptoHasher("sha256").update(文件内容Buffer).digest("hex");
+  const 哈希 = 完整哈希.slice(0, 8);
+
+  const 新文件名字 = `${Date.now()}-${无后缀文件名}-${哈希}${后缀}`;
 
   try {
-    const 二进制文件数据 = await 文件.arrayBuffer();
-    writeFileSync(`${const_数据目录.图标}/${新文件名字}`, Buffer.from(二进制文件数据));
+    await Bun.write(`${const_配置.路径_图标目录}/${新文件名字}`, 文件内容Buffer);
     log.info("图标保存成功:", 新文件名字);
   } catch (e) {
     报错信息 = `图标保存失败`;
@@ -62,9 +84,7 @@ app.post("/", async (c) => {
     throw new HTTPException(400, { message: 报错信息 });
   }
 
-  const_图标列表.push(新文件名字);
-  const_图标列表.sort((a, b) => -a.localeCompare(b));
-
+  const_图标列表.unshift(新文件名字);
   return c.text(新文件名字);
 });
 

@@ -1,4 +1,4 @@
-FROM docker.code.firfe.work/oven/bun:1.3.11 AS build
+FROM --platform=$BUILDPLATFORM docker.code.firfe.work/oven/bun:1.4.3-debian AS build
 
 WORKDIR /app
 
@@ -23,18 +23,21 @@ COPY web /app/web
 RUN cd /app/web && bun run build
 RUN cd /app/server && bun run build
 
-FROM docker.code.firfe.work/oven/bun:1.3.11-alpine
+FROM docker.code.firfe.work/oven/bun:1.4.3-alpine
+
+WORKDIR /app
 
 COPY --from=build --chmod=744 /app/web/dist /app/web
 COPY --from=build --chmod=755 /app/server/dist/index.js /app/index.js
 
-ENV LOG_LEVEL=info DATA_PATH=/data PORT=5191
+ENV PORT=5191
 
 EXPOSE 5191
+
 ENTRYPOINT ["bun","/app/index.js"]
 
 LABEL 项目作者="B站 秦曱凧"
 LABEL 主页="https://github.com/Firfr/OnlyNav"
-LABEL 版本="1.0.0"
+LABEL 版本="1.1.0"
 
-# firfe/only_nav:1.0.0
+# firfe/only_nav:1.1.0

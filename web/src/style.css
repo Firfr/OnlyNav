@@ -1,19 +1,137 @@
-@import "./css//分类.css";
+@import "./css/分类.css";
 @import "./css/子分类.css";
-@import "./css/子分类内容.css";
-@import "./css/层级或导航操作.css";
-@import "./css/删除.css";
-@import "./css/导航操作.css";
-@import "./css/图标选择.css";
-@import "./css/设置-分类.css";
-@import "./css/设置-子分类.css";
-@import "./css/设置-文件夹.css";
+@import "./css/导航_文件夹-共同.css";
+@import "./css/导航.css";
+@import "./css/文件夹.css";
+@import "./css/文件夹-弹窗.css";
+@import "./css/上下文菜单.css";
+@import "./css/操作-弹窗.css";
+@import "./css/设置.css";
+@import "./css/关于.css";
+
+:root {
+  --背景-颜色: #363636;
+  --文字-颜色: #e3e3e3;
+
+  --边框颜色: color-mix(in srgb, var(--文字-颜色), transparent 30%);
+
+  --大圆角: 10px;
+  --小圆角: 6px;
+
+  --内容-宽度: 80%;
+  --搜索-宽度: var(--内容-宽度);
+  --内容-下边距: 40px;
+
+  --公开-标识-颜色: var(--el-color-success);
+
+  --分类-标题高度: 40px;
+
+  --导航_文件夹-间距: 10px;
+  --导航_文件夹-高度: 52px;
+  --导航_文件夹-最小宽度: 150px;
+  --导航_文件夹-背景颜色: rgba(0, 0, 0, 0.2);
+
+  --悬浮按钮-宽度: 40px;
+  --悬浮按钮--边距: 12px;
+
+  --导航-名称-字体大小: 18px;
+  --导航-描述-字体大小: 14px;
+  --导航-名称-无描述-字体大小: 25px;
+
+  --设置-宽度: 700px;
+  --设置-高度: 600px;
+  --设置-边框宽度: 4px;
+  --设置-按钮组-宽度: 70px;
+
+  --图片-顶部高度: 70px;
+  --图标-每行图片数: 7;
+  --图标-展示-间距: 10px;
+
+  --文件夹-弹窗-宽度: 800px;
+  --操作-弹窗-宽度: 500px;
+  --操作-弹窗-最小宽度: 450px;
+
+  --El-Tabs-滑块宽度: 30px;
+
+  --本机字体: "LXGW WenKai", system-ui, "Segoe UI", Roboto, sans-serif;
+  --标题字体: "LXGW WenKai", system-ui, "Segoe UI", Roboto, sans-serif;
+  --等宽字体: "LXGW WenKai", ui-monospace, Consolas, monospace;
+  --表情符号字体:
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "LXGW WenKai", system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  font: 18px/145% var(--本机字体);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--文字-颜色);
+  background-color: var(--背景-颜色);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 * {
   box-sizing: border-box;
   vertical-align: middle;
 
-  font-family: "LXGW WenKai", sans-serif;
+  font-family: var(--本机字体);
+}
+
+html,
+body,
+#id_app {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#id_app {
+  background-image: url("../背景-1.jpg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.选择 {
+  cursor: pointer;
+}
+
+.图标展示-基础 {
+  height: 100%;
+  aspect-ratio: 1/1;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .el-image {
+    height: 100%;
+    aspect-ratio: 1/1;
+  }
+
+  .字符 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: var(--表情符号字体);
+  }
+
+  .图片加载失败 {
+    width: 100%;
+    height: 100%;
+    background-color: #1f1f1f6d;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 a {
@@ -27,77 +145,6 @@ a {
     color: inherit;
     text-decoration: none;
   }
-}
-
-:root {
-  --背景-颜色: #363636;
-  --文字-颜色: #e3e3e3;
-
-  --边框颜色: color-mix(in srgb, var(--文字-颜色), transparent 30%);
-
-  --大圆角: 10px;
-  --小圆角: 6px;
-
-  --内容-宽度: 80%;
-  --内容-下边距: 40px;
-
-  --分类-标题高度: 40px;
-
-  --子分类内容-间距: 10px;
-  --子分类内容-高度: 52px;
-  --子分类内容-最小宽度: 150px;
-  --子分类内容-背景颜色: rgba(0, 0, 0, 0.2);
-
-  --悬浮按钮-宽度: 40px;
-  --悬浮按钮--边距: 12px;
-
-  --设置-宽度: 700px;
-  --设置-高度: 600px;
-  --设置-边框宽度: 4px;
-  --设置-内边距: var(--大圆角);
-  --设置-内容-宽度: calc(var(--设置-宽度) - var(--设置-边框宽度) * 2 - var(--设置-内边距) * 2);
-  --设置-内容-高度: calc(var(--设置-高度) - var(--设置-边框宽度) * 2 - var(--设置-内边距) * 2);
-  --设置-按钮组-宽度: 70px;
-  --设置-设置内容-左边距: var(--大圆角);
-  --设置-设置内容-宽度: calc(
-    var(--设置-内容-宽度) - var(--设置-按钮组-宽度) - var(--设置-设置内容-左边距)
-  );
-
-  --导航-名称-字体大小: 18px;
-  --导航-描述-字体大小: 14px;
-  --导航-名称-无描述-字体大小: 25px;
-
-  --El-Tabs-滑块宽度: 30px;
-}
-
-/* 暗色模式 */
-/* html.dark {
-} */
-
-html,
-body,
-#id_app {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-body {
-  background-color: var(--背景-颜色);
-}
-
-#id_app {
-  color: var(--文字-颜色);
-  background-color: #e3e3e3;
-  /* background: url("背景.jpg") no-repeat center center / cover; */
-  background: url("https://bing.img.run/rand_uhd.php") no-repeat center center / cover;
-}
-
-.主页内容宽度 {
-  width: var(--内容-宽度);
-  max-width: var(--内容-宽度);
 }
 
 :where(.清除按钮默认样式) {
@@ -118,6 +165,10 @@ body {
   }
 }
 
+.el-divider .el-divider__text {
+  padding: 0 6px;
+}
+
 /* 超宽 */
 @media (max-width: 1280px) {
   :root {
@@ -129,6 +180,9 @@ body {
 @media (max-width: 1024px) {
   :root {
     --内容-宽度: 88%;
+    --内容-下边距: 20px;
+
+    --文件夹-弹窗-宽度: 92%;
   }
 }
 
@@ -136,5 +190,9 @@ body {
 @media (max-width: 768px) {
   :root {
     --内容-宽度: 98%;
+    --内容-下边距: 10px;
+
+    --操作-弹窗-宽度: 96%;
+    --文件夹-弹窗-宽度: 96%;
   }
 }

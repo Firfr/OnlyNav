@@ -17,7 +17,7 @@ const fn响应内容格式化 = async (c: Context, next: Next) => {
   const 请求路径 = c.req.path;
   for (const 路径前缀 of 跳过路径前缀集合) {
     if (请求路径.startsWith(路径前缀)) {
-      log.info("跳过响应格式化:", 请求路径);
+      log.debug("跳过响应格式化:", 请求路径);
       return await next();
     }
   }
@@ -44,6 +44,19 @@ const fn响应内容格式化 = async (c: Context, next: Next) => {
     return;
   }
 
+  if (c.get("功能") === "查询是否支持长期登录") {
+    const 新响应头 = new Headers(c.res.headers);
+    新响应头.set("Content-Type", "application/json; charset=utf-8");
+
+    c.res = new Response(
+      JSON.stringify({
+        状态: true,
+        内容: 原响应文本 === "false" ? false : true,
+      }),
+      { status: c.res.status, headers: 新响应头 },
+    );
+    return;
+  }
   const 返回内容: t_返回 = {
     状态: true,
     内容: fn返回内容(原响应文本),
@@ -57,7 +70,7 @@ const fn响应内容格式化 = async (c: Context, next: Next) => {
 
   c.res = new Response(JSON.stringify(返回内容), { status: c.res.status, headers: 新响应头 });
 
-  log.debug(`【${c.req.path}】响应内容格式化完成`);
+  log.trace(`【${c.req.path}】响应内容格式化完成`);
 
   return;
 };

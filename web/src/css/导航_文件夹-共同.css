@@ -1,0 +1,82 @@
+.导航_文件夹-共同 {
+  all: revert;
+
+  min-width: var(--导航_文件夹-最小宽度);
+  height: var(--导航_文件夹-高度);
+  border-radius: var(--大圆角);
+  border: 1px solid rgba(141, 141, 141, 0.8);
+  padding: var(--小圆角);
+  display: flex;
+  overflow: hidden;
+  position: relative;
+
+  backdrop-filter: blur(10px);
+  background-color: var(--导航_文件夹-背景颜色);
+
+  transition:
+    box-shadow 0.5s,
+    background-color 0.5s,
+    backdrop-filter 0.5s,
+    border-color 0.5s;
+
+  &:hover {
+    backdrop-filter: blur(30px);
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: var(--边框颜色);
+  }
+
+  .文字信息 {
+    overflow: hidden;
+    display: flex;
+  }
+
+  .图标 {
+    border-radius: var(--小圆角);
+
+    background-color: color-mix(in srgb, var(--背景-颜色) 60%, transparent);
+
+    .字符 {
+      font-size: 28px;
+      line-height: 28px;
+
+      font-family: var(--表情符号字体);
+    }
+
+    .图片加载失败 {
+      span {
+        font-size: 12px;
+        color: #b9b9b9;
+      }
+    }
+  }
+
+  .文字信息 {
+    flex: 1;
+    margin-left: var(--小圆角);
+
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    & > div {
+      max-width: 100%;
+    }
+    .名称 {
+      font-size: var(--导航-名称-字体大小);
+      line-height: calc(var(--导航-名称-字体大小) - 2px);
+      font-weight: bold;
+    }
+    .描述 {
+      font-size: var(--导航-描述-字体大小);
+      line-height: calc(var(--导航-描述-字体大小) - 2px);
+      line-height: 1;
+      margin-top: 2px;
+    }
+
+    .无描述 {
+      font-size: var(--导航-名称-无描述-字体大小);
+      line-height: calc(var(--导航-名称-无描述-字体大小) - 2px);
+      line-height: 1;
+    }
+  }
+}

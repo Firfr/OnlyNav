@@ -1,225 +1,102 @@
-import { readFileSync } from "node:fs";
-import { const_数据目录 } from "../配置读取";
-import { t_分类, t_子分类, t_导航, t_导航和层级, t_文件夹, t_返回 } from "@公共代码/类型";
-import {
-  fnID校验_分类,
-  fnID校验_子分类,
-  fnID校验_文件夹,
-  fn校验所有数据,
-} from "@公共代码/导航数据校验";
+import { t_导航和层级, t_成功返回, t_返回 } from "@公共代码/类型";
+import { const_配置, const_初始数据 } from "../启动前检查";
 import fn创建日志实例 from "../工具/日志";
+import { HTTPException } from "hono/http-exception";
 
 const log = fn创建日志实例("数据/导航");
 
-const 所有导航数据: t_导航和层级[] = JSON.parse(readFileSync(const_数据目录.导航, "utf-8"));
+const Map_所有导航数据 = structuredClone(const_初始数据.全部导航映射);
 
-const 校验结果 = fn校验所有数据(所有导航数据);
-if (!校验结果.状态) {
-  throw new Error(校验结果.信息);
-}
-log.info("导航数据校验通过");
-
-export const fn获取所有导航数据 = () => 所有导航数据;
+export const fn获取所有导航数据 = () => Map_所有导航数据;
 export const fn获取公开导航数据 = () => {
-  const map = new Map(所有导航数据.map((元素) => [元素.ID, 元素]));
-  const fn是否公开 = (元素: t_导航和层级) => {
-    if (!元素.公开) return false;
-    const 父级元素 = map.get(元素.父级ID);
-    if (父级元素) return 父级元素.公开;
-    return 元素.公开;
+  const 公开缓存 = new Map<number, boolean>();
+
+  const fn是否有效公开 = (ID: number): boolean => {
+    const 已缓存 = 公开缓存.get(ID);
+    if (已缓存 !== undefined) return 已缓存;
+
+    const 数据 = Map_所有导航数据.get(ID);
+    if (!数据 || !数据.公开) {
+      公开缓存.set(ID, false);
+      return false;
+    }
+
+    const 结果 = 数据.类型 === "分类" ? true : fn是否有效公开(数据.父级ID);
+    公开缓存.set(ID, 结果);
+    return 结果;
   };
-  return 所有导航数据.filter(fn是否公开);
+
+  const 公开数据: t_导航和层级[] = [];
+  for (const 数据 of Map_所有导航数据.values()) {
+    if (fn是否有效公开(数据.ID)) 公开数据.push(数据);
+  }
+  return 公开数据;
 };
-export const fn获取所有ID集合 = () => new Set<number>(所有导航数据.map((元素) => 元素.ID));
+export const fn获取所有ID集合 = () => new Set<number>(Map_所有导航数据.keys());
 export const fn获取当前最大ID = () => Math.max(0, ...fn获取所有ID集合());
 
-// #region 导航
-export const fn导航_添加 = async (导航: t_导航): Promise<t_返回> => {
-  所有导航数据.push(导航);
-  await Bun.write(const_数据目录.导航, JSON.stringify(所有导航数据, null, 2));
-  log.debug("添加导航数据成功，数据：", JSON.stringify(导航));
-  return { 状态: true, 信息: "添加导航成功", 内容: 导航 };
-};
-
-export const fn导航_更新 = async (导航ID: number, 更新信息: Partial<t_导航>): Promise<t_返回> => {
-  const 原数据索引 = 所有导航数据.findIndex((元素) => 元素.ID === 导航ID && 元素.类型 === "导航");
-  if (原数据索引 === -1) {
-    return { 状态: false, 信息: `ID 为 ${导航ID} 的导航不存在` };
+const fn数据保存 = async (): Promise<t_成功返回<string>> => {
+  try {
+    const 转数组 = [...Map_所有导航数据.values()].sort((前, 后) => 前.ID - 后.ID);
+    await Bun.write(const_配置.路径_导航数据, JSON.stringify(转数组, null, 2));
+    return { 状态: true, 内容: "导航数据写入本地成功" };
+  } catch (e) {
+    const err = e as Error;
+    log.error(`导航数据 [${const_配置.路径_导航数据}] 写入失败`, err.message);
+    throw new HTTPException(500, { message: "服务器内部出错，请查看日志！" });
   }
-  (所有导航数据[原数据索引] as unknown) = { ...所有导航数据[原数据索引], ...更新信息 };
-
-  await Bun.write(const_数据目录.导航, JSON.stringify(所有导航数据, null, 2));
-  log.debug(`导航 ${导航ID} 数据更新成功，更新部分数据：`, JSON.stringify(更新信息));
-  return { 状态: true, 信息: `导航 ${导航ID} 数据更新成功`, 内容: 所有导航数据[原数据索引] };
 };
 
-export const fn导航_删除 = async (ID: number): Promise<t_返回> => {
-  const 数据索引 = 所有导航数据.findIndex((元素) => 元素.ID === ID && 元素.类型 === "导航");
-  if (数据索引 === -1) return { 状态: false, 信息: `ID 为 ${ID} 的导航不存在` };
-
-  const 要删除数据 = 所有导航数据[数据索引];
-
-  所有导航数据.splice(数据索引, 1);
-
-  await Bun.write(const_数据目录.导航, JSON.stringify(所有导航数据, null, 2));
-
-  log.debug("删除导航数据成功，被删除数据：", JSON.stringify(要删除数据));
-  return { 状态: true, 信息: "删除成功", 内容: 要删除数据 };
-};
-// #endregion
-
-// #region 文件夹
-export const fn文件夹_删除 = async (ID: number): Promise<t_返回> => {
-  const ID校验 = fnID校验_文件夹(所有导航数据, ID);
-  if (!ID校验.状态) return { 状态: false, 信息: ID校验.信息 };
-
-  const 数据索引 = 所有导航数据.findIndex((元素) => 元素.ID === ID && 元素.类型 === "文件夹");
-  if (数据索引 === -1) return { 状态: false, 信息: `ID 为 ${ID} 的文件夹不存在` };
-
-  const 要删除数据 = 所有导航数据[数据索引];
-  const 直接子内容集合 = 所有导航数据.filter((元素) => 元素.父级ID === ID);
-
-  for (const 子内容 of 直接子内容集合) {
-    const 删除子内容 = await fn导航_删除(子内容.ID);
-    if (!删除子内容.状态) {
-      return { 状态: false, 信息: `ID 为 ${ID} 的文件夹\n  ${删除子内容.信息}` };
-    }
+export const fn添加 = async (数据: t_导航和层级): Promise<t_返回<string>> => {
+  if (Map_所有导航数据.has(数据.ID)) {
+    const 信息 = `ID 为 [${数据.ID}] 的 ${数据.类型} 已经存在！`;
+    log.warn(信息);
+    return { 状态: false, 信息: 信息 };
   }
 
-  所有导航数据.splice(数据索引, 1);
+  数据.名称 = 数据.名称.trim();
+  数据.描述 = 数据.描述.trim();
 
-  await Bun.write(const_数据目录.导航, JSON.stringify(所有导航数据, null, 2));
+  Map_所有导航数据.set(数据.ID, 数据);
 
-  log.debug("删除文件夹数据成功，被删除数据：", JSON.stringify(要删除数据));
-  return { 状态: true, 信息: "删除成功", 内容: 要删除数据 };
+  await fn数据保存();
+  return { 状态: true, 内容: `ID 为 [${数据.ID}] 的 ${数据.类型} 添加成功` };
 };
 
-export const fn文件夹_添加 = async (文件夹数据: t_文件夹): Promise<t_返回> => {
-  所有导航数据.push(文件夹数据);
-  await Bun.write(const_数据目录.导航, JSON.stringify(所有导航数据, null, 2));
-  log.debug("添加文件夹数据成功，数据：", JSON.stringify(文件夹数据));
-  return { 状态: true, 信息: "添加分类成功", 内容: 文件夹数据 };
-};
+export const fn更新 = async (
+  ID: number,
+  更新信息: Partial<t_导航和层级>,
+): Promise<t_返回<string>> => {
+  const 原数据 = Map_所有导航数据.get(ID) as t_导航和层级;
 
-export const fn文件夹_更新 = async (
-  文件夹ID: number,
-  更新信息: Partial<t_文件夹>,
-): Promise<t_返回> => {
-  const 原数据索引 = 所有导航数据.findIndex(
-    (元素) => 元素.ID === 文件夹ID && 元素.类型 === "文件夹",
-  );
-  if (原数据索引 === -1) {
-    return { 状态: false, 信息: `ID 为 ${文件夹ID} 的文件夹不存在` };
-  }
-  (所有导航数据[原数据索引] as unknown) = { ...所有导航数据[原数据索引], ...更新信息 };
-
-  await Bun.write(const_数据目录.导航, JSON.stringify(所有导航数据, null, 2));
-  log.debug(`文件夹 ${文件夹ID} 数据更新成功，更新部分数据：`, JSON.stringify(更新信息));
-  return { 状态: true, 信息: `文件夹 ${文件夹ID} 数据更新成功`, 内容: 所有导航数据[原数据索引] };
-};
-// #endregion
-
-// #region 子分类
-export const fn子分类_删除 = async (ID: number): Promise<t_返回> => {
-  const ID校验 = fnID校验_子分类(所有导航数据, ID);
-  if (!ID校验.状态) return { 状态: false, 信息: ID校验.信息 };
-
-  const 数据索引 = 所有导航数据.findIndex((元素) => 元素.ID === ID && 元素.类型 === "子分类");
-  if (数据索引 === -1) return { 状态: false, 信息: `ID 为 ${ID} 的子分类不存在` };
-
-  const 要删除数据 = 所有导航数据[数据索引];
-  const 直接子内容集合 = 所有导航数据.filter((元素) => 元素.父级ID === ID);
-
-  for (const 子内容 of 直接子内容集合) {
-    if (子内容.类型 === "导航") {
-      const 删除子内容 = await fn导航_删除(子内容.ID);
-      if (!删除子内容.状态) {
-        return { 状态: false, 信息: `ID 为 ${ID} 的子分类\n  ${删除子内容.信息}` };
-      }
-      continue;
-    }
-    const 删除子内容 = await fn文件夹_删除(子内容.ID);
-    if (!删除子内容.状态) {
-      return { 状态: false, 信息: `ID 为 ${ID} 的子分类\n  ${删除子内容.信息}` };
-    }
+  if (!原数据) {
+    const 信息 = `ID 为 [${ID}] 的数据不存在！`;
+    log.warn(信息);
+    return { 状态: false, 信息: 信息 };
   }
 
-  所有导航数据.splice(数据索引, 1);
-
-  await Bun.write(const_数据目录.导航, JSON.stringify(所有导航数据, null, 2));
-
-  log.debug("删除子分类数据成功，被删除数据：", JSON.stringify(要删除数据));
-  return { 状态: true, 信息: "删除成功", 内容: 要删除数据 };
-};
-
-export const fn子分类_添加 = async (子分类数据: t_子分类): Promise<t_返回> => {
-  所有导航数据.push(子分类数据);
-  await Bun.write(const_数据目录.导航, JSON.stringify(所有导航数据, null, 2));
-  log.debug("添加子分类数据成功，数据：", JSON.stringify(子分类数据));
-  return { 状态: true, 信息: "添加分类成功", 内容: 子分类数据 };
-};
-
-export const fn子分类_更新 = async (
-  子分类ID: number,
-  更新信息: Partial<t_子分类>,
-): Promise<t_返回> => {
-  const 原数据索引 = 所有导航数据.findIndex(
-    (元素) => 元素.ID === 子分类ID && 元素.类型 === "子分类",
-  );
-  if (原数据索引 === -1) {
-    return { 状态: false, 信息: `ID 为 ${子分类ID} 的子分类不存在` };
+  if ("名称" in 更新信息) {
+    更新信息.名称 = 更新信息.名称!.trim();
   }
-  (所有导航数据[原数据索引] as unknown) = { ...所有导航数据[原数据索引], ...更新信息 };
-
-  await Bun.write(const_数据目录.导航, JSON.stringify(所有导航数据, null, 2));
-  log.debug(`子分类 ${子分类ID} 数据更新成功，更新部分数据：`, JSON.stringify(更新信息));
-  return { 状态: true, 信息: `子分类 ${子分类ID} 数据更新成功`, 内容: 所有导航数据[原数据索引] };
-};
-// #endregion
-
-// #region 分类
-export const fn分类_删除 = async (ID: number): Promise<t_返回> => {
-  const ID校验 = fnID校验_分类(所有导航数据, ID);
-  if (!ID校验.状态) return { 状态: false, 信息: ID校验.信息 };
-
-  const 数据索引 = 所有导航数据.findIndex((元素) => 元素.ID === ID && 元素.类型 === "分类");
-  if (数据索引 === -1) return { 状态: false, 信息: `ID 为 ${ID} 的分类不存在` };
-
-  const 要删除数据 = 所有导航数据[数据索引];
-  const 直接子内容集合 = 所有导航数据.filter((元素) => 元素.父级ID === ID);
-
-  for (const 子内容 of 直接子内容集合) {
-    const 删除子内容 = await fn子分类_删除(子内容.ID);
-    if (!删除子内容.状态) {
-      return { 状态: false, 信息: `ID 为 ${ID} 的分类\n  ${删除子内容.信息}` };
-    }
+  if ("描述" in 更新信息) {
+    更新信息.描述 = 更新信息.描述!.trim();
   }
 
-  所有导航数据.splice(数据索引, 1);
+  Map_所有导航数据.set(ID, { ...原数据, ...更新信息 } as t_导航和层级);
 
-  await Bun.write(const_数据目录.导航, JSON.stringify(所有导航数据, null, 2));
-
-  log.debug("删除分类数据成功，被删除数据：", JSON.stringify(要删除数据));
-  return { 状态: true, 信息: "删除成功", 内容: 要删除数据 };
+  await fn数据保存();
+  return { 状态: true, 内容: `ID 为 [${ID}] 的 ${原数据.类型} 更新成功` };
 };
 
-export const fn分类_添加 = async (分类数据: t_分类): Promise<t_返回> => {
-  所有导航数据.push(分类数据);
-  await Bun.write(const_数据目录.导航, JSON.stringify(所有导航数据, null, 2));
-  log.debug("添加分类数据成功，数据：", JSON.stringify(分类数据));
-  return { 状态: true, 信息: "添加分类成功", 内容: 分类数据 };
-};
-
-export const fn分类_更新 = async (分类ID: number, 更新信息: Partial<t_分类>): Promise<t_返回> => {
-  const 原数据索引 = 所有导航数据.findIndex((元素) => 元素.ID === 分类ID && 元素.类型 === "分类");
-  if (原数据索引 === -1) {
-    return { 状态: false, 信息: `ID 为 ${分类ID} 的分类不存在` };
+export const fn删除 = async (ID: number): Promise<t_返回<string>> => {
+  if (!Map_所有导航数据.has(ID)) {
+    const 信息 = `ID 为 [${ID}] 的数据 不存在！`;
+    log.warn(信息);
+    return { 状态: false, 信息: 信息 };
   }
 
-  (所有导航数据[原数据索引] as unknown) = { ...所有导航数据[原数据索引], ...更新信息 };
+  Map_所有导航数据.delete(ID);
 
-  await Bun.write(const_数据目录.导航, JSON.stringify(所有导航数据, null, 2));
-  log.debug(`分类 ${分类ID} 数据更新成功，更新部分数据：`, JSON.stringify(更新信息));
-  return { 状态: true, 信息: `分类 ${分类ID} 数据更新成功`, 内容: 所有导航数据[原数据索引] };
+  await fn数据保存();
+  return { 状态: true, 内容: `ID 为 [${ID}] 的数据 删除成功` };
 };
-// #endregion

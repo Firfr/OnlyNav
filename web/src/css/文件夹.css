@@ -1,0 +1,23 @@
+.文件夹 {
+  &::after {
+    position: absolute;
+
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: calc(var(--小圆角) - 2px);
+    content: "";
+    background-color: aqua;
+  }
+
+  .公开 {
+    position: absolute;
+    left: 1px;
+    top: 10px;
+
+    height: calc(100% - 20px);
+    width: 1px;
+    background: var(--公开-标识-颜色);
+  }
+}

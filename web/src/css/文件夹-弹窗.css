@@ -1,0 +1,85 @@
+.文件夹-弹窗 {
+  min-width: var(--文件夹-弹窗-宽度);
+
+  .顶部信息 {
+    max-width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: var(--大圆角);
+
+    color: var(--文字-颜色);
+
+    .文件夹公开 {
+      width: 2px;
+      height: 100%;
+      background-color: var(--公开-标识-颜色);
+    }
+
+    .添加导航 {
+      height: 100%;
+      opacity: 0.2;
+      transition: opacity 0.3s ease;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .文字 {
+      flex: 1;
+
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      overflow: hidden;
+      white-space: nowrap;
+
+      .标题 {
+        font-size: 32px;
+        line-height: 32px;
+        font-weight: 900;
+      }
+
+      .描述 {
+        font-size: 14px;
+      }
+    }
+
+    .图标 {
+      border-radius: var(--小圆角);
+      --图标展示-字符-字体大小: 30px;
+
+      .字符 {
+        font-size: 30px;
+        line-height: 30px;
+      }
+
+      .图片加载失败 {
+        span {
+          font-size: 18px;
+          color: #b9b9b9;
+        }
+      }
+    }
+  }
+
+  .文件夹-导航 {
+    margin-top: var(--大圆角);
+    width: 100%;
+    border-radius: var(--大圆角);
+    border: 1px solid rgb(from var(--文字-颜色) r g b / 0.1);
+    padding: calc(var(--大圆角) * 2);
+    backdrop-filter: blur(10px);
+    background-color: rgba(82, 82, 82, 0.05);
+
+    display: grid;
+    gap: var(--导航_文件夹-间距);
+    grid-template-columns: repeat(auto-fit, minmax(var(--导航_文件夹-最小宽度), 1fr));
+  }
+}

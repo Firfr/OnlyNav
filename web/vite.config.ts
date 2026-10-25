@@ -22,17 +22,17 @@ export default defineConfig({
     port: 1234,
     proxy: {
       "/api": {
-        target: "http://192.168.13.4:5191",
+        target: "http://192.168.13.4:1235",
         changeOrigin: true,
         secure: false,
       },
       "/login": {
-        target: "http://192.168.13.4:5191",
+        target: "http://192.168.13.4:1235",
         changeOrigin: true,
         secure: false,
       },
       "/seting": {
-        target: "http://192.168.13.4:5191",
+        target: "http://192.168.13.4:1235",
         changeOrigin: true,
         secure: false,
       },
@@ -42,13 +42,7 @@ export default defineConfig({
   plugins: [
     vue(),
     AutoImport({
-      imports: [
-        "vue",
-        "vue-router",
-        {
-          "naive-ui": ["useDialog", "useMessage", "useNotification", "useLoadingBar"],
-        },
-      ],
+      imports: [{ "naive-ui": ["useDialog", "useMessage", "useNotification", "useLoadingBar"] }],
       dts: "src/auto-import.d.ts",
       resolvers: [ElementPlusResolver()],
     }),
@@ -57,7 +51,7 @@ export default defineConfig({
       dts: "src/components.d.ts",
       resolvers: [
         ElementPlusResolver(),
-        // 👇 关键配置：自定义 Resolver 自动识别 ElIcon 前缀并从官方包中按需导入
+        // 👇 自定义 Resolver 自动识别 ElIcon 前缀并从官方包中按需导入
         (name) => {
           if (name.startsWith("ElIcon")) {
             return {

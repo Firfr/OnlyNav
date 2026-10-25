@@ -1,0 +1,294 @@
+#id_设置 {
+  z-index: 20;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: auto;
+
+  .设置-内容 {
+    flex-shrink: 0;
+
+    min-width: 500px;
+    width: var(--设置-宽度);
+    height: var(--设置-高度);
+    border: calc(var(--大圆角) / 2) solid var(--边框颜色);
+    border-radius: var(--大圆角);
+    padding: var(--大圆角);
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(30px);
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    overflow: hidden;
+  }
+
+  .设置-按钮组 {
+    width: var(--设置-按钮组-宽度);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--大圆角);
+
+    .el-button {
+      margin: 0;
+    }
+
+    .分隔 {
+      margin-top: auto;
+    }
+  }
+
+  .设置-功能区 {
+    flex: 1;
+    flex-shrink: 0;
+    margin-left: var(--大圆角);
+    height: 100%;
+    overflow: hidden;
+  }
+}
+
+#id_设置-遮罩 {
+  z-index: 19;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(18, 18, 18, 0.2);
+}
+
+#id_图标 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .图标-顶部 {
+    /* height: var(--图片-顶部高度); */
+    display: flex;
+    flex-direction: column;
+
+    .按钮 {
+      display: flex;
+      margin-bottom: var(--大圆角);
+    }
+
+    .提示 {
+      display: flex;
+      justify-content: center;
+      margin-bottom: var(--大圆角);
+    }
+  }
+
+  .图标展示滚动框容器 {
+    .图标展示滚动框内容 {
+      display: grid;
+      gap: var(--图标-展示-间距);
+      grid-template-columns: repeat(var(--图标-每行图片数), 1fr);
+
+      .单个展示图片 {
+        aspect-ratio: 1/1;
+        background-color: #f0f8ff2b;
+        border-radius: var(--小圆角);
+      }
+    }
+  }
+}
+
+.图标-上传 {
+  .已选文件列表 {
+    margin-top: var(--小圆角);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--小圆角);
+
+    .el-button {
+      margin: 0;
+    }
+
+    .el-input-group__append {
+      padding: 0 var(--小圆角);
+    }
+
+    .原名 {
+      max-width: 200px;
+      white-space: nowrap;
+    }
+
+    .新文件名 {
+      flex: 1;
+    }
+  }
+}
+
+.设置-层级-公开 {
+  border-left: 1.5px solid var(--公开-标识-颜色);
+}
+
+.设置-层级-共有 {
+  width: 100%;
+  height: 100% !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: var(--文字-颜色);
+
+  .父级选择 {
+    margin-bottom: var(--小圆角);
+
+    display: flex;
+    align-items: center;
+    gap: var(--大圆角);
+
+    .提示文字 {
+      white-space: nowrap;
+      font-size: 16px;
+    }
+
+    .选择器 {
+      flex: 1;
+    }
+  }
+}
+
+#id_设置-分类 {
+  border-radius: var(--大圆角);
+}
+
+#id_设置-子分类,
+#id_设置-文件夹 {
+  .父级信息 {
+    width: 100%;
+    height: 60px;
+    margin-bottom: var(--大圆角);
+    border-radius: var(--大圆角);
+    display: flex;
+    gap: var(--大圆角);
+
+    .信息展示 {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--大圆角);
+      white-space: nowrap;
+
+      .基础信息 {
+        display: flex;
+        gap: var(--大圆角);
+      }
+    }
+
+    .图标 {
+      border-radius: var(--大圆角);
+
+      .字符 {
+        font-size: 40px;
+        line-height: 40px;
+      }
+
+      .图片加载失败 {
+        background-color: #1f1f1f6d;
+
+        span {
+          font-size: 16px;
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+
+  .表格 {
+    flex: 1;
+    border-radius: var(--大圆角);
+
+    .名称 {
+      &,
+      & * {
+        white-space: nowrap;
+      }
+    }
+
+    .圆按钮 {
+      padding: 3px;
+      span,
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .公开 {
+      border: 1.5px solid var(--el-color-success);
+      border-radius: 50%;
+      color: #ffffff;
+    }
+  }
+}
+
+/* 离开 的动画属性和时间 */
+.设置-leave-active {
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+/* 离开状态 开始样式 */
+.设置-leave-from {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+/* 离开状态 结束样式 */
+.设置-leave-to {
+  opacity: 0;
+  transform: translate(50vw, -50vh) scale(0);
+}
+
+/* 进入 的动画属性和时间 */
+.设置-内容-enter-active {
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+/* 进入状态 开始样式 */
+.设置-内容-enter-from {
+  opacity: 0;
+  transform: translate(50vw, -50vh) scale(0);
+}
+/* 进入状态 结束样式 */
+.设置-内容-enter-to {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+/* 进入 和 离开 的动画属性和时间 */
+.设置-遮罩-enter-active,
+.设置-遮罩-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+/* 进入状态 开始样式 */
+/* 离开状态 结束样式 */
+.设置-遮罩-enter-from,
+.设置-遮罩-leave-to {
+  opacity: 0;
+}
+
+/* 进入状态 结束样式 */
+/* 离开状态 开始样式 */
+.设置-遮罩-enter-to,
+.设置-遮罩-leave-from {
+  opacity: 1;
+}

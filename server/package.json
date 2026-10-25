@@ -5,8 +5,9 @@
     "build": "bun build src/入口.ts --target=bun --outfile=dist/index.js"
   },
   "dependencies": {
+    "@hono/bun": "^1.0.1",
     "crypto-js": "^4.2.0",
-    "hono": "^4.13.13",
+    "hono": "^4.13.14",
     "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {

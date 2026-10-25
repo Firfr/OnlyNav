@@ -1,0 +1,164 @@
+.操作-查看-弹窗,
+.操作-编辑-弹窗,
+.操作-添加-弹窗,
+.操作-移动-弹窗,
+.操作-排序-弹窗,
+.操作-删除-弹窗 {
+  width: var(--操作-弹窗-宽度);
+  min-width: var(--操作-弹窗-最小宽度);
+  max-width: 96%;
+
+  .弹窗内容 {
+    display: flex;
+    flex-direction: column;
+    gap: var(--大圆角);
+
+    & > * {
+      width: 100%;
+    }
+  }
+
+  .行信息 {
+    display: flex;
+    & > .左侧标签 {
+      width: 60px;
+      text-align: right;
+      margin-right: var(--大圆角);
+    }
+    & > .内容 {
+      flex: 1;
+    }
+  }
+
+  .层级信息 {
+    & > .内容 {
+      display: flex;
+    }
+  }
+
+  .信息聚合 {
+    display: flex;
+    height: 80px;
+
+    gap: var(--大圆角);
+
+    .信息 {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+
+      white-space: nowrap;
+    }
+
+    .图标 {
+      border-radius: var(--大圆角);
+
+      .字符 {
+        font-size: 50px;
+        line-height: 50px;
+      }
+
+      .图片加载失败 {
+        span {
+          font-size: 16px;
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+
+  .图标类型 {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  .图标设置 {
+    white-space: nowrap;
+
+    .el-form-item__content {
+      flex-wrap: nowrap;
+      align-items: center;
+      .表情符号输入 {
+        .el-input__wrapper {
+          max-width: fit-content;
+        }
+        input {
+          max-width: 20px;
+        }
+      }
+    }
+
+    .图标选择 {
+      flex: 1;
+      position: relative;
+      .图标选择-悬浮层 {
+        position: absolute;
+        top: 0;
+        left: calc((100% - 100px) / 2);
+        /* background-color: rgba(240, 248, 255, 0.527); */
+        width: 100px;
+        height: 60%;
+      }
+    }
+  }
+}
+
+.操作-排序-弹窗 {
+  .排序容器 {
+    display: grid;
+    gap: var(--大圆角);
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    min-height: 0;
+    overflow: visible;
+
+    .拖拽元素 {
+      max-width: 250px;
+      height: 50px;
+      border-radius: var(--大圆角);
+      border: 1px solid rgba(141, 141, 141, 0.8);
+      padding: var(--小圆角);
+      overflow: hidden;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      &.公开 {
+        border-bottom: 2px solid var(--公开-标识-颜色);
+      }
+    }
+  }
+}
+#id_图标选择 {
+  width: var(--图标-选择-宽度);
+  max-height: var(--图标-选择-高度);
+
+  .图标选择滚动框内容 {
+    display: grid;
+    gap: var(--大圆角);
+    grid-template-columns: repeat(var(--图标-选择-每行数量), 1fr);
+
+    .选项 {
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      cursor: pointer;
+      background-color: #f0f8ff2b;
+      border-radius: var(--小圆角);
+
+      img {
+        aspect-ratio: 1/1;
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .选中 {
+      border: 1px solid rgb(255, 255, 255);
+    }
+  }
+}
