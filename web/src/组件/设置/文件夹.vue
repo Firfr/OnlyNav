@@ -156,6 +156,7 @@ const fn操作文件夹 = (ID: number, 操作方式: t_操作方式 | "排序") 
         v-model="ref_当前选择内容"
         :options="cmp_级联选择器数据"
         @change="fn选中子分类"
+        placeholder="请选择 分类 / 子分类"
       />
     </div>
 
