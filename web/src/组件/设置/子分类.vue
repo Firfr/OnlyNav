@@ -49,7 +49,21 @@ const cmp_本组件所有展示数据 = computed<t_本组件所有展示数据>(
   return 返回值;
 });
 
-const fn操作子分类 = (ID: number, 操作方式: t_操作方式) => {
+const fn操作子分类 = (ID: number, 操作方式: t_操作方式 | "排序") => {
+  const 选择数据 = cmp_数据格式化.value.Map_全部数据.get(ref_当前选择分类ID.value);
+  if (选择数据?.类型 !== "分类") {
+    ElMessage.warning("未选择分类！");
+    return;
+  }
+
+  if (操作方式 === "排序") {
+    rea_弹窗_操作.操作 = "排序";
+    rea_弹窗_操作.父级类型 = "分类";
+    rea_弹窗_操作.层级 = [选择数据];
+    rea_弹窗_操作.显示 = true;
+    return;
+  }
+
   if (操作方式 === "添加") {
     rea_弹窗_操作.操作 = "添加";
     rea_弹窗_操作.类型 = "子分类";
@@ -84,19 +98,6 @@ const fn操作子分类 = (ID: number, 操作方式: t_操作方式) => {
   rea_弹窗_操作.类型 = "子分类";
   rea_弹窗_操作.父级类型 = "分类";
   rea_弹窗_操作.层级 = [cmp_本组件所有展示数据.value.分类信息];
-  rea_弹窗_操作.显示 = true;
-};
-
-const fn子分类排序 = () => {
-  const 选择数据 = cmp_数据格式化.value.Map_全部数据.get(ref_当前选择分类ID.value);
-  if (选择数据?.类型 !== "分类") {
-    ElMessage.warning("未选择分类！");
-    return;
-  }
-
-  rea_弹窗_操作.操作 = "排序";
-  rea_弹窗_操作.父级类型 = "分类";
-  rea_弹窗_操作.层级 = [选择数据];
   rea_弹窗_操作.显示 = true;
 };
 </script>
@@ -180,7 +181,7 @@ const fn子分类排序 = () => {
             style="display: flex; flex-direction: row; justify-content: center; align-items: center"
           >
             <el-button
-              @click="fn子分类排序"
+              @click="fn操作子分类('排序')"
               type="primary"
               circle
               size="small"
