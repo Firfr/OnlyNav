@@ -38,6 +38,6 @@ ENTRYPOINT ["bun","/app/index.js"]
 
 LABEL 项目作者="B站 秦曱凧"
 LABEL 主页="https://github.com/Firfr/OnlyNav"
-LABEL 版本="1.1.2"
+LABEL 版本="1.1.3"
 
-# firfe/only_nav:1.1.2
+# firfe/only_nav:1.1.3

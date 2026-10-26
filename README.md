@@ -46,20 +46,20 @@
 - 国内仓库
   - AMD64镜像
     ```bash
-    swr.cn-north-4.myhuaweicloud.com/firfe/only_nav:1.1.2
+    swr.cn-north-4.myhuaweicloud.com/firfe/only_nav:1.1.3
     ```
   - ARM64镜像
     ```bash
-    swr.cn-north-4.myhuaweicloud.com/firfe/only_nav:1.1.2-arm64
+    swr.cn-north-4.myhuaweicloud.com/firfe/only_nav:1.1.3-arm64
     ```
 - DockerHub仓库
   - AMD64镜像
     ```bash
-    firfe/only_nav:1.1.2
+    firfe/only_nav:1.1.3
     ```
   - ARM64镜像
     ```bash
-    firfe/only_nav:1.1.2-arm64
+    firfe/only_nav:1.1.3-arm64
     ```
 
 ## 部署
@@ -94,7 +94,7 @@ docker run -dit \
 -e USER=用户名 \
 -e PASS=密码 \
 -v ./data:/data \
-firfe/only_nav:1.1.2
+firfe/only_nav:1.1.3
 ```
 
 ### compose 文件部署 👍推荐
@@ -104,7 +104,7 @@ name: only_nav
 services:
   only_nav:
     container_name: only_nav
-    image: swr.cn-north-4.myhuaweicloud.com/firfe/only_nav:1.1.2
+    image: swr.cn-north-4.myhuaweicloud.com/firfe/only_nav:1.1.3
     network_mode: bridge
     restart: always
     logging:
