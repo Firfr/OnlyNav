@@ -47,7 +47,7 @@ const cmp_本组件所有展示数据 = computed<t_本组件所有展示数据>(
   return 返回值;
 });
 
-const fn操作子分类 = (ID: number, 操作方式: t_操作方式 | "排序") => {
+const fn操作子分类 = (操作方式: t_操作方式 | "排序", ID: number) => {
   const 选择数据 = cmp_数据格式化.value.Map_全部数据.get(ref_当前选择分类ID.value!);
   if (选择数据?.类型 !== "分类") {
     ElMessage.warning("未选择分类！");
@@ -209,7 +209,7 @@ const fn操作子分类 = (ID: number, 操作方式: t_操作方式 | "排序") 
           >
             子分类
             <el-button
-              @click="fn操作子分类(0, '添加')"
+              @click="fn操作子分类('添加')"
               type="primary"
               circle
               size="small"
@@ -222,7 +222,7 @@ const fn操作子分类 = (ID: number, 操作方式: t_操作方式 | "排序") 
         <template #default="scope">
           <div
             style="width: 100%; height: 100%; cursor: pointer"
-            @click="fn操作子分类(scope.row.ID, '查看')"
+            @click="fn操作子分类('查看', scope.row.ID)"
           >
             {{ scope.row.名称 }}
           </div>
@@ -257,7 +257,7 @@ const fn操作子分类 = (ID: number, 操作方式: t_操作方式 | "排序") 
       <el-table-column label="操作" width="84" align="center">
         <template #default="scope">
           <el-button
-            @click="fn操作子分类(scope.row.ID, '删除')"
+            @click="fn操作子分类('删除', scope.row.ID)"
             type="danger"
             circle
             size="small"
@@ -265,7 +265,7 @@ const fn操作子分类 = (ID: number, 操作方式: t_操作方式 | "排序") 
             :icon="Delete"
           />
           <el-button
-            @click="fn操作子分类(scope.row.ID, '编辑')"
+            @click="fn操作子分类('编辑', scope.row.ID)"
             type="primary"
             circle
             size="small"
