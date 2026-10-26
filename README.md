@@ -8,7 +8,7 @@
 
 正如项目的名字 **只有导航** 一样，只专注于个人网址的收藏和展示。 让网址收藏不在局限于浏览器的收藏夹！提供多层级设置，方便对不同的导航进行聚合分类。
 
-当前项目的背景图片来自微软 Bing 官方提供的API接口，每次刷新都会返回一张随机壁纸。
+当前项目的背景图片在容器中 `/app/web/背景-1.jpg` ，可使用自定义图片进行映射替换
 
 - 仓库
   - GitHub仓库 https://github.com/Firfr/OnlyNav
@@ -46,20 +46,20 @@
 - 国内仓库
   - AMD64镜像
     ```bash
-    swr.cn-north-4.myhuaweicloud.com/firfe/only_nav:1.0.0
+    swr.cn-north-4.myhuaweicloud.com/firfe/only_nav:1.1.1
     ```
   - ARM64镜像
     ```bash
-    swr.cn-north-4.myhuaweicloud.com/firfe/only_nav:1.0.0-arm64
+    swr.cn-north-4.myhuaweicloud.com/firfe/only_nav:1.1.1-arm64
     ```
 - DockerHub仓库
   - AMD64镜像
     ```bash
-    firfe/only_nav:1.0.0
+    firfe/only_nav:1.1.1
     ```
   - ARM64镜像
     ```bash
-    firfe/only_nav:1.0.0-arm64
+    firfe/only_nav:1.1.1-arm64
     ```
 
 ## 部署
@@ -104,7 +104,7 @@ name: only_nav
 services:
   only_nav:
     container_name: only_nav
-    image: swr.cn-north-4.myhuaweicloud.com/firfe/only_nav:1.1.0
+    image: swr.cn-north-4.myhuaweicloud.com/firfe/only_nav:1.1.1
     network_mode: bridge
     restart: always
     logging:
@@ -129,6 +129,7 @@ services:
       - 5191:5191
     volumes:
       - ./data:/data
+      # - 自定义图片.jpg:/app/web/背景-1.jpg
 ```
 
 ## 效果截图
