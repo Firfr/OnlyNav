@@ -186,7 +186,7 @@ onBeforeUnmount(() => 拖拽实例?.destroy());
         :key="项.ID"
         :data-id="项.ID"
         class="拖拽元素"
-        :class="{ 公开: 项.公开 }"
+        :class="{ 公开: 项.公开, 文件夹: 项.类型 === '文件夹' }"
       >
         <div>{{ 项.类型 }}</div>
         <div>{{ 项.名称 }}</div>

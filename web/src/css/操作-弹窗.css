@@ -131,7 +131,21 @@
       align-items: center;
 
       &.公开 {
-        border-bottom: 2px solid var(--公开-标识-颜色);
+        position: relative;
+
+        &::after {
+          position: absolute;
+
+          left: 0;
+          top: 10px;
+          width: 2px;
+          height: calc(100% - 20px);
+          background-color: var(--公开-标识-颜色);
+        }
+      }
+
+      &.文件夹 {
+        border-bottom: 4px solid aqua;
       }
     }
   }
