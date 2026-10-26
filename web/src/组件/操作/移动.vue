@@ -84,6 +84,16 @@ const rul_校验规则 = reactive<FormRules>({
   ],
 });
 
+if (rea_弹窗_操作.层级[0]) {
+  rea_表单数据.分类ID = rea_弹窗_操作.层级[0].ID;
+}
+if (rea_弹窗_操作.层级[1]) {
+  rea_表单数据.子分类ID = rea_弹窗_操作.层级[1].ID;
+}
+if (rea_弹窗_操作.层级[2]) {
+  rea_表单数据.文件夹ID = rea_弹窗_操作.层级[2].ID;
+}
+
 const fn提交 = async () => {
   if (rea_弹窗_操作.类型 !== rea_弹窗_操作.当前.类型) {
     ElMessage.error(`组件 编辑.vue 所需数据出错！`);
