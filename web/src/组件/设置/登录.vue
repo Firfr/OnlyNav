@@ -142,6 +142,7 @@ const fn登录 = async (表单实例: FormInstance | undefined) => {
             v-model="rea_表单数据.长期登录秘钥"
             type="password"
             placeholder="请输入长期登录秘钥"
+            clearable
           />
           <div style="margin: auto">
             <el-tag type="danger">↑ 请不要在公共设备上填写！！！ ↑</el-tag>
