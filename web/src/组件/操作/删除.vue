@@ -39,13 +39,13 @@ const fn删除 = async () => {
   }
 
   if (rea_弹窗_操作.类型 !== "导航") {
-    const 层级数据 = cmp_数据格式化.value.Map_层级数据.get(rea_弹窗_操作.当前.ID);
-    if (!层级数据) {
+    if (!cmp_数据格式化.value.Map_全部数据.has(rea_弹窗_操作.当前.ID)) {
       ElMessage.error(`[${rea_弹窗_操作.类型}] ${rea_弹窗_操作.当前.名称} 不存在！`);
       fn关闭组件();
       return;
     }
-    if (层级数据.length > 0) {
+    const 层级数据 = cmp_数据格式化.value.Map_层级数据.get(rea_弹窗_操作.当前.ID);
+    if (层级数据 && 层级数据.length > 0) {
       ElMessage.error(
         `[${rea_弹窗_操作.类型}] ${rea_弹窗_操作.当前.名称} 存在 ${层级数据.length} 个子内容，无法删除！`,
       );
