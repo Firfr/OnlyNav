@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { onUnmounted, reactive, ref } from "vue";
 import SHA256 from "crypto-js/sha256";
 import WordArray from "crypto-js/lib-typedarrays";
 import { fn发送请求 } from "../../工具/请求";
@@ -102,6 +102,10 @@ const fn登录 = async (表单实例: FormInstance | undefined) => {
     fn关闭组件();
   } catch (校验失败详情) {}
 };
+
+onUnmounted(() => {
+  fn关闭组件();
+});
 </script>
 
 <template>
