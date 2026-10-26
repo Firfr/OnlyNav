@@ -94,7 +94,7 @@ docker run -dit \
 -e USER=用户名 \
 -e PASS=密码 \
 -v ./data:/data \
-firfe/only_nav:1.1.0
+firfe/only_nav:1.1.1
 ```
 
 ### compose 文件部署 👍推荐
