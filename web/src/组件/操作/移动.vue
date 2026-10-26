@@ -159,6 +159,7 @@ const fn提交 = async () => {
     align-center
     @closed="fn关闭组件"
     :title="`移动 [${rea_弹窗_操作.类型}] ${rea_弹窗_操作.当前.名称}`"
+    style="width: var(--操作-弹窗-宽度)"
     class="操作-移动-弹窗"
     body-class="弹窗内容"
   >
@@ -275,6 +276,5 @@ const fn提交 = async () => {
         <el-button @click="fn提交" type="primary">确定</el-button>
       </div>
     </el-form>
-    {{ { ...rea_表单数据 } }}
   </el-dialog>
 </template>

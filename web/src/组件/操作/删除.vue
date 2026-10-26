@@ -95,7 +95,9 @@ const fn删除 = async () => {
     align-center
     @closed="fn关闭组件"
     :title="`${rea_弹窗_操作.操作} [${rea_弹窗_操作.类型}] ${rea_弹窗_操作.当前.名称}`"
+    style="width: var(--操作-弹窗-宽度)"
     class="操作-删除-弹窗"
+    body-class="弹窗内容"
   >
     <div class="行信息 层级信息" v-for="层级 in rea_弹窗_操作.层级">
       <div class="左侧标签">{{ 层级.类型 }}</div>

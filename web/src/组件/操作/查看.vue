@@ -26,6 +26,7 @@ const cmp_标题 = computed(() => {
     align-center
     @closed="fn关闭组件"
     :title="cmp_标题"
+    style="width: var(--操作-弹窗-宽度)"
     class="操作-查看-弹窗"
     body-class="弹窗内容"
   >

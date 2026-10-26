@@ -116,6 +116,7 @@ const fn提交 = async () => {
     align-center
     @closed="fn关闭组件"
     :title="`添加 [${rea_弹窗_操作.类型}]`"
+    style="width: var(--操作-弹窗-宽度)"
     class="操作-添加-弹窗"
     body-class="弹窗内容"
   >
@@ -204,16 +205,16 @@ const fn提交 = async () => {
       <el-form-item v-else prop="图标地址" label="图标地址" class="图标设置">
         <div class="图标选择">
           <el-input readonly v-model="rea_表单数据.图标地址" placeholder="请选择图片···" />
-          <el-tooltip raw-content placement="bottom" effect="light">
+          <el-tooltip
+            raw-content
+            placement="bottom"
+            effect="light"
+            popper-class="图标选择-悬浮容器"
+            popper-style="width: calc(var(--操作-弹窗-宽度) - 102px);
+            height:300px; padding: 4px; translate: 1px 8px;"
+          >
             <template #content>
-              <div class="层级或导航操作_选择图标">
-                <Vue_选择图标
-                  v-model:ref_选中图标="rea_表单数据.图标地址"
-                  宽度="300px"
-                  高度="400px"
-                  :列数="6"
-                />
-              </div>
+              <Vue_选择图标 v-model:ref_选中图标="rea_表单数据.图标地址" :列数="6" />
             </template>
             <div class="图标选择-悬浮层"></div>
           </el-tooltip>
