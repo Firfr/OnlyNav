@@ -8,7 +8,15 @@ import { 默认值_分类信息 } from "../../工具/默认值";
 import { Delete, EditPen, Plus, Sort } from "@element-plus/icons-vue";
 import Vue_图标 from "../其他/图标.vue";
 
-const ref_当前选择分类ID = ref<number>(Number(localStorage.getItem(设置_子分类_选中分类ID)) ?? 0);
+const fn初始化选择分类ID = () => {
+  const 存储的分类ID = Number(localStorage.getItem(设置_子分类_选中分类ID));
+  if (Number.isFinite(存储的分类ID)) {
+    return 存储的分类ID;
+  }
+  return 0;
+};
+
+const ref_当前选择分类ID = ref<number>(fn初始化选择分类ID());
 const fn选择分类后 = () => {
   localStorage.setItem(设置_子分类_选中分类ID, `${ref_当前选择分类ID.value}`);
 };
@@ -24,9 +32,12 @@ const cmp_本组件所有展示数据 = computed<t_本组件所有展示数据>(
   };
   if (cmp_数据格式化.value.分类列表.length === 0) return 返回值;
 
-  返回值.分类信息 = fn层级数据转信息(
-    cmp_数据格式化.value.Map_全部数据.get(ref_当前选择分类ID.value) as t_分类,
-  );
+  const 分类数据 = cmp_数据格式化.value.Map_全部数据.get(ref_当前选择分类ID.value);
+  if (!分类数据) {
+    return 返回值;
+  }
+
+  返回值.分类信息 = fn层级数据转信息(分类数据 as t_分类);
 
   const 子分类列表 = cmp_数据格式化.value.Map_层级数据.get(ref_当前选择分类ID.value);
   if (!子分类列表) return 返回值;
@@ -268,7 +279,3 @@ const fn子分类排序 = () => {
     </el-table>
   </div>
 </template>
-
-<style scoped>
-/* 样式 */
-</style>
