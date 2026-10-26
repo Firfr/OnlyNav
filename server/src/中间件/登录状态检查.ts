@@ -7,7 +7,7 @@ import fn创建日志实例 from "../工具/日志";
 import { fn普通凭据, fn超长凭据 } from "../数据/凭据";
 import { t_返回 } from "@公共代码/类型";
 
-const log = fn创建日志实例("登录状态检查.ts");
+const log = fn创建日志实例("中间价/登录状态检查.ts");
 
 const fn秒时间戳转换 = (秒时间戳: number) => {
   const date = new Date((秒时间戳 + 8 * 3600) * 1000);
@@ -31,7 +31,7 @@ const fn登录状态 = (c: Context): t_返回<string> => {
     return { 状态: false, 信息: "请登录！" };
   }
 
-  if (const_配置.长期登录凭据 && !是否超长凭据) {
+  if (!const_配置.长期登录凭据 && 是否超长凭据) {
     log.warn("未配置 长期登录凭据 ，不允许 长期登录!");
     return { 状态: false, 信息: "未配置 长期登录凭据 ，不允许 长期登录!" };
   }
